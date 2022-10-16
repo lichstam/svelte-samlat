@@ -4,7 +4,7 @@
     "esModuleInterop": true,
     "lib": ["es6"],
     "module": "ES2022",
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "noEmit": true,
     "noEmitOnError": false,
     "noUnusedLocals": true,
