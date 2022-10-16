@@ -1,11 +1,11 @@
-import type { QueryRecord, ValidateQueries } from './_types'
+import type { QueryRecord, ValidateQueries } from "./types"
 
-export const _queryFn =
+export const queryFn =
   <K extends QueryRecord>(q: ValidateQueries<K>) =>
   async <T extends keyof K>(
     api: T,
-    params?: Parameters<K[T]['fn']>[0]
-  ): Promise<ReturnType<K[T]['transformationFn']>> => {
+    params?: Parameters<K[T]["fn"]>[0]
+  ): Promise<ReturnType<K[T]["transformationFn"]>> => {
     const { fn, decoder, transformationFn } = q[api]
     const response = await fn(params)
     try {

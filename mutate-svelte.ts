@@ -1,6 +1,6 @@
-import { writable } from 'svelte/store'
+import { writable } from "svelte/store"
 
-export const _mutateSvelte =
+export const mutateSvelte =
   <K, P, R>(queryFn: (key: K, params?: P) => R) =>
   (api: K) => {
     const loading = writable(false)

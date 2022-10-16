@@ -1,11 +1,11 @@
-import { makeQueries } from './_make-queries'
+import { makeQueries } from "./make-queries"
 
-describe('#_make-queries', () => {
-  it('Should return correct query', () => {
+describe("#_make-queries", () => {
+  it("Should return correct query", () => {
     const expected = {
-      fn: () => 'request response',
+      fn: () => "request response",
       decoder: (x: any) => x,
-      transformationFn: (x: any) => x
+      transformationFn: (x: any) => x,
     }
     const queries = makeQueries(expected)
 

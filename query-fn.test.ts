@@ -1,53 +1,52 @@
-import { identity } from 'ramda'
-import { _queryFn } from './_query-fn'
+import { queryFn as _queryFn } from "./query-fn"
 
-describe('#queryfn', () => {
+describe("#queryfn", () => {
   const queries = {
     request: {
-      fn: vi.fn(),
-      decoder: identity,
-      transformationFn: vi.fn()
+      fn: jest.fn(),
+      decoder: (res) => res,
+      transformationFn: jest.fn(),
     },
 
     request2: {
       fn: (res: any) => res,
-      decoder: identity,
-      transformationFn: identity
+      decoder: (res) => res,
+      transformationFn: (res) => res,
     },
 
     request3: {
       fn: (res: any) => res,
-      decoder: vi.fn(),
-      transformationFn: identity
-    }
+      decoder: jest.fn(),
+      transformationFn: (res) => res,
+    },
   }
 
   const queryFn = _queryFn(queries)
-  it('Should return response ', async () => {
-    queries.request.fn.mockResolvedValueOnce('request response')
-    queries.request.transformationFn.mockImplementationOnce(identity)
+  it("Should return response ", async () => {
+    queries.request.fn.mockResolvedValueOnce("request response")
+    queries.request.transformationFn.mockImplementationOnce((res) => res)
 
-    const query = await queryFn('request')
-    expect(query).toEqual('request response')
+    const query = await queryFn("request")
+    expect(query).toEqual("request response")
   })
 
-  it('Should return response modified response', async () => {
+  it("Should return response modified response", async () => {
     queries.request.transformationFn.mockResolvedValueOnce(
-      'request response modified'
+      "request response modified"
     )
-    const query = await queryFn('request')
-    expect(query).toEqual('request response modified')
+    const query = await queryFn("request")
+    expect(query).toEqual("request response modified")
   })
 
-  it('Should return param sent into queryFn', async () => {
-    const query = await queryFn('request2', 'param')
-    expect(query).toEqual('param')
+  it("Should return param sent into queryFn", async () => {
+    const query = await queryFn("request2", "param")
+    expect(query).toEqual("param")
   })
 
-  it('Should throw error if decoder fails', async () => {
+  it("Should throw error if decoder fails", async () => {
     queries.request3.decoder.mockImplementationOnce(() => {
-      throw Error('decoder error')
+      throw Error("decoder error")
     })
-    await expect(queryFn('request3')).rejects.toThrow('decoder error')
+    await expect(queryFn("request3")).rejects.toThrow("decoder error")
   })
 })
