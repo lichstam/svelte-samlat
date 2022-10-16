@@ -1,6 +1,6 @@
 {
   "name": "svelte-samlat",
-  "version": "0.0.1",
+  "version": "0.0.10",
   "repository": "git@github.com:lichstam/svelte-samlat.git",
   "type": "module",
   "author": "Martin Lichstam <martin.lichstam@gmail.com>",
