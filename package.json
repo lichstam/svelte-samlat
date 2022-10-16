@@ -1,17 +1,12 @@
 {
   "name": "svelte-samlat",
-  "version": "0.0.20",
+  "version": "0.0.3",
   "repository": "git@github.com:lichstam/svelte-samlat.git",
   "type": "module",
   "author": "Martin Lichstam <martin.lichstam@gmail.com>",
   "license": "MIT",
   "main": "./dist/index.mjs",
-  "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
-    }
-  },
+  "types": "./dist/index.d.ts",
   "scripts": {
     "test": "jest",
     "build": "rollup -c",
