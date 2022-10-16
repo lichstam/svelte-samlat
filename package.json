@@ -5,6 +5,9 @@
   "repository": "git@github.com:lichstam/svelte-samlat.git",
   "author": "Martin Lichstam <martin.lichstam@gmail.com>",
   "license": "MIT",
+  "scripts":  {
+    "test": "jest"
+  },
   "dependencies": {
     "svelte": "^3.52.0"
   },
