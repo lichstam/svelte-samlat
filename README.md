@@ -1,14 +1,14 @@
 # **Samlat**
 
 <p align="center">
-  <img width="650" alt="collected" src="https://github.com/lichstam/svelte-samlat/blob/main/assets/data-collection.png">
+  <img width="150" alt="collected" src="https://github.com/lichstam/svelte-samlat/blob/main/assets/data-collection.png">
 </p>
 
 ## **Preface**
 
 > Samlat - Swedish word for "collected"
 
-Inspired by libraries such as react-query and SWR samlat helps you to structure api functions and provides great convenience
+Inspired by libraries such as react-query and SWR samlat helps you structure api functions and provides great convenience
 
 ```javascript
 const { data, loading, errors, get } = query("someRequest")
