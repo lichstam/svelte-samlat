@@ -1,7 +1,7 @@
 # **Samlat**
 
 <p align="center">
-  <img width="650" alt="collected" src="">
+  <img width="650" alt="collected" src="https://github.com/lichstam/svelte-samlat/blob/main/assets/data-collection.png">
 </p>
 
 ## **Preface**
