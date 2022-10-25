@@ -4,6 +4,19 @@
   <img width="150" alt="collected" src="https://github.com/lichstam/svelte-samlat/blob/main/assets/data-collection.png">
 </p>
 
+## **How to install?**
+
+> yarn
+
+```javascript
+yarn add svelte-samlat
+```
+
+> npm
+
+```javascript
+npm i svelte-samlat
+```
 ## **What is this?**
 
 > Samlat - Swedish word for "collected"
