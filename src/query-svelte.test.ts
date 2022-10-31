@@ -2,58 +2,52 @@ import { querySvelte } from "./query-svelte"
 
 describe("#_query-svelte", () => {
   it("Should return attributes", () => {
-    const { data, loading, error, get } = querySvelte((key: string) => key)(
-      "foo"
-    )
-    expect(data).toBeDefined()
-    expect(loading).toBeDefined()
-    expect(error).toBeDefined()
+    const { state, get } = querySvelte((key: string) => key)("foo")
+    expect(state).toBeDefined()
     expect(get).toBeDefined()
   })
 
   it("Should return data when get is called", async () => {
-    const { data, loading, error, get } = querySvelte((key: string) => ({
+    const { state, get } = querySvelte((key: string) => ({
       [key]: "hello",
     }))("foo")
 
     await get()
-
-    data.subscribe((res) => {
-      expect(res).toEqual({ foo: "hello" })
+    state.subscribe((res) => {
+      expect(res.data).toEqual({ foo: "hello" })
     })
 
-    expect(loading).toBeDefined()
-    expect(error).toBeDefined()
+    expect(state).toBeDefined()
     expect(get).toBeDefined()
   })
 
   it("Should set loading to true", () => {
-    const { loading, get } = querySvelte((key: string) => ({
+    const { state, get } = querySvelte((key: string) => ({
       [key]: "hello",
     }))("foo")
     get()
-    loading.subscribe((res) => {
-      if (res) expect(res).toEqual(true)
+    state.subscribe((res) => {
+      if (res.status) expect(res.status).toEqual("loading")
     })
   })
 
   it("Should return error", () => {
-    const { error, get } = querySvelte((_: string) => {
+    const { state, get } = querySvelte((_: string) => {
       throw new Error("error")
     })("foo")
     get()
-    error.subscribe((res) => {
-      if (res) expect(res.message).toEqual("error")
+    state.subscribe((res) => {
+      if (res) expect(res.status).toEqual("error")
     })
   })
 
   it("Should return response with param", async () => {
-    const { data, get } = querySvelte((key: string, params?: number) => ({
+    const { state, get } = querySvelte((key: string, params?: number) => ({
       [key]: params,
-    }))("foo")
-    await get(33)
-    data.subscribe((res) => {
-      expect(res).toEqual({ foo: 33 })
+    }))("foo", 33)
+    await get()
+    state.subscribe((res) => {
+      expect(res.data).toEqual({ foo: 33 })
     })
   })
 })

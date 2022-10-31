@@ -1,24 +1,71 @@
-import { writable } from "svelte/store"
+import { readable, writable } from 'svelte/store'
+
+type Query<R> =
+  | {
+    status: 'idle'
+    error: null
+    data: undefined
+  }
+  | {
+    status: 'loading'
+    error: null
+    data: undefined
+  }
+  | {
+    status: 'error'
+    error: Error
+    data: undefined
+  }
+  | {
+    status: 'success'
+    error: null
+    data: Awaited<R>
+  }
 
 export const querySvelte =
   <K, P, R>(queryFn: (key: K, params?: P) => R) =>
-  (api: K) => {
-    const loading = writable(false)
-    const error = writable<Error | null>(null)
-    const data = writable<Awaited<R>>()
+    (api: K, params?: P) => {
+      const _state = writable<Query<R>>({
+        status: 'idle',
+        error: null,
+        data: undefined
+      })
 
-    async function get(params?: P) {
-      loading.set(true)
-      error.set(null)
-      try {
-        const result = await queryFn(api, params)
-        data.set(result)
-      } catch (e) {
-        error.set(e as Error)
-      } finally {
-        loading.set(false)
+      const get = async (): Promise<void> => {
+        _state.set({
+          ..._state,
+          status: 'loading',
+          error: null,
+          data: undefined
+        })
+
+        try {
+          const result = await queryFn(api, params)
+          _state.set({
+            status: 'success',
+            error: null,
+            data: result
+          })
+        } catch (e) {
+          _state.set({
+            status: 'error',
+            error: e as Error,
+            data: undefined
+          })
+        }
       }
-      loading.set(false)
+
+      const state = readable<Query<R>>(
+        {
+          status: 'idle',
+          error: null,
+          data: undefined
+        },
+        (set) =>
+          _state.subscribe((nextState) => {
+            set(nextState)
+          })
+      )
+
+      return { get, state }
     }
-    return { data, loading, error, get }
-  }
