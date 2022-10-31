@@ -17,6 +17,7 @@ yarn add svelte-samlat
 ```javascript
 npm i svelte-samlat
 ```
+
 ## **What is this?**
 
 > Samlat - Swedish word for "collected"
@@ -24,9 +25,11 @@ npm i svelte-samlat
 Inspired by libraries such as react-query and SWR samlat helps you structure api functions and provides great convenience. All typesafe.
 
 ```javascript
-const { data, loading, errors, get } = query("someRequest")
+const { state } = query("someRequest")
 
-get()
+if ($state.status === "success") {
+  $state.data // do something with it
+}
 ```
 
 You specify everything in one place:
@@ -113,14 +116,14 @@ export default querySvelte(queryFn(queries));
   import { fade } from 'svelte/transition';
   import query from './queryFn'
   export const prerender = true
-  const { data, loading, get } = query('gateway')
+  const { state, get } = query('gateway', undefined, { manual: true })
 </script>
 
 <nav>
-  {#if $loading}
+  {#if $state.status === 'loading'}
     <div >Loading....</div>
-  {:else if $data}
-    <div transition:fade={{duration: 300}}>{JSON.stringify($data)}</div>
+  {:else if $state.status === 'success'}
+    <div>{JSON.stringify($state.data)}</div>
   {/if}
   <div on:click={get}>click me</div>
 </nav>
