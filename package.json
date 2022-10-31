@@ -2,7 +2,6 @@
   "name": "svelte-samlat",
   "version": "0.0.31",
   "repository": "git@github.com:lichstam/svelte-samlat.git",
-  "type": "module",
   "author": "Martin Lichstam <martin.lichstam@gmail.com>",
   "license": "MIT",
   "main": "./dist/index.mjs",
