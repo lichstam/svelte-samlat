@@ -22,9 +22,13 @@ type Query<R> =
     data: Awaited<R>
   }
 
+interface Options {
+  manual?: boolean
+}
+
 export const querySvelte =
   <K, P, R>(queryFn: (key: K, params?: P) => R) =>
-    (api: K, params?: P) => {
+    (api: K, params?: P, options?: Options) => {
       const _state = writable<Query<R>>({
         status: 'idle',
         error: null,
@@ -66,6 +70,10 @@ export const querySvelte =
             set(nextState)
           })
       )
+
+      if (options?.manual !== true) {
+        void get()
+      }
 
       return { get, state }
     }

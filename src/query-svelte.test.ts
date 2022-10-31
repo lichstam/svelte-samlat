@@ -7,14 +7,14 @@ describe("#_query-svelte", () => {
     expect(get).toBeDefined()
   })
 
-  it("Should return data when get is called", async () => {
+  it("Should return data on calling query", async () => {
     const { state, get } = querySvelte((key: string) => ({
       [key]: "hello",
     }))("foo")
-
-    await get()
     state.subscribe((res) => {
-      expect(res.data).toEqual({ foo: "hello" })
+      if (res.status === "success") {
+        expect(res.data).toEqual({ foo: "hello" })
+      }
     })
 
     expect(state).toBeDefined()
@@ -22,32 +22,49 @@ describe("#_query-svelte", () => {
   })
 
   it("Should set loading to true", () => {
-    const { state, get } = querySvelte((key: string) => ({
+    const { state } = querySvelte((key: string) => ({
       [key]: "hello",
     }))("foo")
-    get()
     state.subscribe((res) => {
       if (res.status) expect(res.status).toEqual("loading")
     })
   })
 
   it("Should return error", () => {
-    const { state, get } = querySvelte((_: string) => {
+    const { state } = querySvelte((_: string) => {
       throw new Error("error")
     })("foo")
-    get()
     state.subscribe((res) => {
       if (res) expect(res.status).toEqual("error")
     })
   })
 
   it("Should return response with param", async () => {
-    const { state, get } = querySvelte((key: string, params?: number) => ({
+    const { state } = querySvelte((key: string, params?: number) => ({
       [key]: params,
     }))("foo", 33)
-    await get()
     state.subscribe((res) => {
-      expect(res.data).toEqual({ foo: 33 })
+      if (res.status === "success") {
+        expect(res.data).toEqual({ foo: 33 })
+      }
+    })
+  })
+
+  it("Should not trigger fetch when manual is true", async () => {
+    const { state, get } = querySvelte((key: string) => ({
+      [key]: "hello",
+    }))("foo", undefined, { manual: true })
+
+    const unsubscribe = state.subscribe((res) => {
+      expect(res.status).toEqual("idle")
+    })
+
+    unsubscribe()
+
+    await get()
+
+    state.subscribe((res) => {
+      expect(res.status).toEqual("success")
     })
   })
 })
