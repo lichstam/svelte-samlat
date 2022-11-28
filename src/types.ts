@@ -3,10 +3,10 @@ export type ValidateQueries<T extends QueryRecord> = {
 }
 
 export type QueryRecord = Record<
-  string,
-  {
-    fn: (...args: any[]) => Promise<any>
-    decoder: (...args: any[]) => any
-    transformationFn: (...args: any[]) => any
-  }
+string,
+{
+  fn: (...args: any[]) => Promise<any>
+  decoder: (...args: any[]) => any
+  transformationFn: (...args: any[]) => any
+}
 >

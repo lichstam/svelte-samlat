@@ -2,58 +2,68 @@ import { mutateSvelte } from "./mutate-svelte"
 
 describe("#_query-svelte", () => {
   it("Should return attributes", () => {
-    const { data, loading, error, trigger } = mutateSvelte(
-      (key: string) => key
-    )("foo")
-    expect(data).toBeDefined()
-    expect(loading).toBeDefined()
-    expect(error).toBeDefined()
+    const { state, trigger } = mutateSvelte((key: string) => key)("foo")
+    expect(state).toBeDefined()
     expect(trigger).toBeDefined()
   })
 
-  it("Should return data when trigger is called", async () => {
-    const { data, loading, error, trigger } = mutateSvelte((key: string) => ({
+  it("Should return data on calling query", async () => {
+    const { state, trigger } = mutateSvelte((key: string) => ({
       [key]: "hello",
     }))("foo")
-
-    await trigger()
-
-    data.subscribe((res) => {
-      expect(res).toEqual({ foo: "hello" })
+    state.subscribe((res) => {
+      if (res.status === "success") {
+        expect(res.data).toEqual({ foo: "hello" })
+      }
     })
 
-    expect(loading).toBeDefined()
-    expect(error).toBeDefined()
+    expect(state).toBeDefined()
     expect(trigger).toBeDefined()
   })
 
   it("Should set loading to true", () => {
-    const { loading, trigger } = mutateSvelte((key: string) => ({
+    const { state } = mutateSvelte((key: string) => ({
       [key]: "hello",
     }))("foo")
-    trigger()
-    loading.subscribe((res) => {
-      if (res) expect(res).toEqual(true)
+    state.subscribe((res) => {
+      if (res.status) expect(res.status).toEqual("loading")
     })
   })
 
   it("Should return error", () => {
-    const { error, trigger } = mutateSvelte((_: string) => {
+    const { state } = mutateSvelte((_: string) => {
       throw new Error("error")
     })("foo")
-    trigger()
-    error.subscribe((res) => {
-      if (res) expect(res.message).toEqual("error")
+    state.subscribe((res) => {
+      if (res) expect(res.status).toEqual("error")
     })
   })
 
   it("Should return response with param", async () => {
-    const { data, trigger } = mutateSvelte((key: string, params?: number) => ({
+    const { state } = mutateSvelte((key: string, params?: number) => ({
       [key]: params,
-    }))("foo")
-    await trigger(33)
-    data.subscribe((res) => {
-      expect(res).toEqual({ foo: 33 })
+    }))("foo", 33)
+    state.subscribe((res) => {
+      if (res.status === "success") {
+        expect(res.data).toEqual({ foo: 33 })
+      }
+    })
+  })
+
+  it("Should not trigger fetch when manual is true", async () => {
+    const { state, trigger } = mutateSvelte((key: string) => ({
+      [key]: "hello",
+    }))("foo", undefined, { manual: true })
+    const unsubscribe = state.subscribe((res) => {
+      expect(res.status).toEqual("idle")
+    })
+
+    unsubscribe()
+
+    await trigger()
+
+    state.subscribe((res) => {
+      expect(res.status).toEqual("success")
     })
   })
 })
